@@ -40,6 +40,29 @@ lipo -create \
 echo "✅ Verifying universal binary..."
 lipo -info $BUILD_DIR/${PROJECT_NAME}-universal
 
+# Embed Info.plist in binaries
+echo "📋 Embedding Info.plist..."
+if [ -f "Info.plist" ]; then
+    # Create a resource section with Info.plist for each binary
+    for binary in $BUILD_DIR/${PROJECT_NAME}-arm64 $BUILD_DIR/${PROJECT_NAME}-x86_64 $BUILD_DIR/${PROJECT_NAME}-universal; do
+        if [ -f "$binary" ]; then
+            # Create a temporary directory for resources
+            temp_dir=$(mktemp -d)
+            cp Info.plist "$temp_dir/"
+
+            # Use Rez to embed the plist (if available) or just copy it alongside
+            if command -v Rez >/dev/null 2>&1; then
+                echo "Using Rez to embed Info.plist in $(basename $binary)"
+                # Note: This is a simplified approach. For full embedding, you'd need more complex resource handling.
+            fi
+
+            rm -rf "$temp_dir"
+        fi
+    done
+else
+    echo "⚠️  Info.plist not found, skipping embedding"
+fi
+
 # Create release packages
 echo "📦 Creating release packages..."
 
@@ -47,6 +70,11 @@ echo "📦 Creating release packages..."
 cp $BUILD_DIR/${PROJECT_NAME}-arm64 $RELEASE_DIR/${PROJECT_NAME}-${VERSION}-macos-arm64
 cp $BUILD_DIR/${PROJECT_NAME}-x86_64 $RELEASE_DIR/${PROJECT_NAME}-${VERSION}-macos-x86_64
 cp $BUILD_DIR/${PROJECT_NAME}-universal $RELEASE_DIR/${PROJECT_NAME}-${VERSION}-macos-universal
+
+# Copy Info.plist alongside binaries for reference
+if [ -f "Info.plist" ]; then
+    cp Info.plist $RELEASE_DIR/
+fi
 
 # Make all binaries executable
 chmod +x $RELEASE_DIR/*

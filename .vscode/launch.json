@@ -1,0 +1,22 @@
+{
+  "configurations": [
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:agenda}",
+      "name": "Debug agenda",
+      "program": "${workspaceFolder:agenda}/.build/debug/agenda",
+      "preLaunchTask": "swift: Build Debug agenda"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:agenda}",
+      "name": "Release agenda",
+      "program": "${workspaceFolder:agenda}/.build/release/agenda",
+      "preLaunchTask": "swift: Build Release agenda"
+    }
+  ]
+}

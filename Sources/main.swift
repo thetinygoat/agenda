@@ -166,6 +166,23 @@ struct AgendaCommand: ParsableCommand {
     var endDate: String?
 
     func run() throws {
+        // Validate date options
+        // Rule 1: Ensure --date and --start-date/--end-date are not used together.
+        if date != nil && (startDate != nil || endDate != nil) {
+            throw ValidationError("Cannot use --date with --start-date or --end-date.")
+        }
+
+        // Rule 2: Ensure --start-date and --end-date are used as a pair.
+        if (startDate != nil && endDate == nil) || (startDate == nil && endDate != nil) {
+            throw ValidationError("The --start-date and --end-date options must be used together.")
+        }
+
+        // Rule 3: Ensure at least one date-related option is provided.
+        if date == nil && startDate == nil {
+            throw ValidationError(
+                "You must provide either --date or both --start-date and --end-date.")
+        }
+
         let semaphore = DispatchSemaphore(value: 0)
         var accessGranted = false
         let agenda = Agenda()
@@ -250,24 +267,6 @@ struct AgendaCommand: ParsableCommand {
             byAdding: DateComponents(day: 1, second: -1), to: calendar.startOfDay(for: endDate))!
 
         return (startOfDay, endOfDay)
-    }
-
-    func validate() throws {
-        // Rule 1: Ensure --date and --start-date/--end-date are not used together.
-        if date != nil && (startDate != nil || endDate != nil) {
-            throw ValidationError("Cannot use --date with --start-date or --end-date.")
-        }
-
-        // Rule 2: Ensure --start-date and --end-date are used as a pair.
-        if (startDate != nil && endDate == nil) || (startDate == nil && endDate != nil) {
-            throw ValidationError("The --start-date and --end-date options must be used together.")
-        }
-
-        // Rule 3: Ensure at least one date-related option is provided.
-        if date == nil && startDate == nil {
-            throw ValidationError(
-                "You must provide either --date or both --start-date and --end-date.")
-        }
     }
 
     private func parseDate(from string: String) -> Date? {

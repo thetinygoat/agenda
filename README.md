@@ -93,44 +93,6 @@ agenda --date today --pretty
 agenda --date today
 ```
 
-## Shell Completions
-
-Want tab completion for all the options? Here's how to set it up:
-
-### Zsh (recommended for macOS)
-
-```bash
-# Create completions directory
-mkdir -p ~/.zsh/completions
-
-# Add to your ~/.zshrc if not already there:
-# fpath=(~/.zsh/completions $fpath)
-
-# Generate completion script
-agenda __generate-completion-script zsh > ~/.zsh/completions/_agenda
-
-# Reload your shell
-exec zsh
-```
-
-### Fish
-
-```bash
-agenda __generate-completion-script fish > ~/.config/fish/completions/agenda.fish
-```
-
-### Bash
-
-```bash
-# Install bash-completion if you haven't already
-brew install bash-completion
-
-# Generate completion script
-agenda __generate-completion-script bash > $(brew --prefix)/etc/bash_completion.d/agenda
-```
-
-After setting up completions, you can type `agenda --` and hit Tab to see all available options!
-
 ## Security & Verification
 
 ### Verifying Downloads
@@ -144,7 +106,7 @@ Each release includes SHA256 checksums to verify the integrity of the downloaded
    ```bash
    # For a specific file
    shasum -a 256 agenda-v1.0.0-macos-universal
-   
+
    # Compare the output with the hash in checksums.txt
    cat checksums.txt | grep universal
    ```
@@ -178,4 +140,4 @@ The default JSON output includes:
 ## Requirements
 
 - macOS (uses EventKit framework)
-- Swift 5.7+ (for building from source)
+- Swift 6.1+ (for building from source)
