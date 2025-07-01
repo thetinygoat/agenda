@@ -19,7 +19,13 @@ The tool is smart about finding meeting links in your events. It checks the even
 
 1. Go to the [Releases page](https://github.com/thetinygoat/agenda/releases)
 2. Download the latest `agenda` binary for your platform
-3. Make it executable and move it to your PATH:
+3. (Optional but recommended) Verify the checksum:
+   ```bash
+   # Download both the binary and checksums.txt
+   # Then verify with:
+   shasum -a 256 -c checksums.txt
+   ```
+4. Make it executable and move it to your PATH:
    ```bash
    chmod +x agenda
    mv agenda /usr/local/bin/agenda
@@ -124,6 +130,35 @@ agenda __generate-completion-script bash > $(brew --prefix)/etc/bash_completion.
 ```
 
 After setting up completions, you can type `agenda --` and hit Tab to see all available options!
+
+## Security & Verification
+
+### Verifying Downloads
+
+Each release includes SHA256 checksums to verify the integrity of the downloaded binaries. This ensures your download hasn't been tampered with.
+
+**Step-by-step verification:**
+
+1. Download both the binary and `checksums.txt` from the same release
+2. Verify the checksum matches:
+   ```bash
+   # For a specific file
+   shasum -a 256 agenda-v1.0.0-macos-universal
+   
+   # Compare the output with the hash in checksums.txt
+   cat checksums.txt | grep universal
+   ```
+3. Or verify all files at once:
+   ```bash
+   shasum -a 256 -c checksums.txt
+   ```
+
+You should see output like:
+```
+agenda-v1.0.0-macos-universal: OK
+```
+
+If verification fails, **do not use the binary** and download it again.
 
 ## Privacy & Permissions
 
